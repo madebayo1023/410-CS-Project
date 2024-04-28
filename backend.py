@@ -5,6 +5,7 @@ from collections import Counter
 import collections
 import string
 import nltk
+import numpy as np
 
 """
     Processes a document / query.
@@ -55,9 +56,68 @@ def process_dataset():
     vocab_set = set(vocab) # set of all the words in the dictionary
     return dict, word_counts, vocab_set
 
+def bm25(dict, query, vocabulary):
+    results = {}
+    constant = 1.2
+    idf_dict = {}
+    query_words = query.split()
+    score=0.0
+    stemmed_query_words = []
+    ps = nltk.LancasterStemmer()
+
+    for word in query_words:
+        stemmed_query_words.append(ps.stem(word))
+    # iterate through documents, which are the song lyrics
+    for title, lyrics in dict.items():
+        name = title
+        doc = lyrics
+        score = 0.0
+        for word in stemmed_query_words:
+            if word in doc and word in vocabulary:
+                # print(word)
+                # print("word")
+                # calculate the tf for query and document
+                tf_q = calculate_tf(stemmed_query_words, word)
+                tf_d = calculate_tf(doc, word)
+                # calculate idf if not present in idf_dic
+                if word in idf_dict:
+                    idf = idf_dict[word]
+                else:
+                    idf = calculate_idf(dict, word, idf_dict)
+                numerator = (constant+1)*tf_d
+                denominator = tf_d + constant
+                # add to document score
+                score+= tf_q*(numerator/denominator)*idf
+
+        # update dictionary with score for this current doc
+
+        results[name]=score
+    return results
+
+# tf helper function to count frequency of word in document
+def calculate_tf(data, word):
+    term_frequency = data.count(word)
+
+    return term_frequency
+# idf helper function to get document frequ
+def calculate_idf(dict, word, idf_dict):
+    M = len(dict)
+    document_frequency=0
+    for title, lyrics in dict.items():
+        doc = lyrics
+        if word in doc:
+            document_frequency+=1
+    idf = np.log((M+1)/(document_frequency))
+
+    idf_dict[word]=idf
+    return idf
+
+
 def main():
     title_to_lyrics, word_counts, vocab_set = process_dataset() # takes 20 seconds to run
 
+
+    # print(vocab_set)
     # run everything in a loop so that user can input multiple song titles and get many
     # recs at once until they decide to quit
     while True:
@@ -67,11 +127,19 @@ def main():
         if user_input not in title_to_lyrics:
             print("We are unable to find songs similar to", user_input)
         else:
-            # TODO 
+            # TODO
                 # call bm25 tf-idf function to return top 10 similar songs, using the lyrics of the entered song title as the query
                 # we are assuming that the songs entered exist in the data set + match case in dataset exactly
             print(user_input, "stemmed and parsed lyrics:", title_to_lyrics[user_input])
+            scores_dict = bm25(title_to_lyrics, title_to_lyrics[user_input], vocab_set)
+            results = sorted(scores_dict.items(), key=lambda x:x[1], reverse=True)[1:10]
+            top_ten_songs = []
+            for pair in results:
+                top_ten_songs.append(pair[0])
 
+            print("results\n")
+            print(top_ten_songs)
+            # print(results)
 if __name__ == "__main__":
     main()
 
@@ -83,11 +151,11 @@ if __name__ == "__main__":
 
 #     # Function to preprocess text
 #     # Remove stop-words, transform words to lower-case, remove punctuation and numbers, and excess
-#     # whitespaces (keeping only one space that separates words). 
+#     # whitespaces (keeping only one space that separates words).
 #     def preprocess_text(text):
 #         # Convert to lowercase
 #         text = text.lower()
-        
+
 #         # Remove punctuation and numbers
 #         c = []
 #         for letter in text:
@@ -95,13 +163,13 @@ if __name__ == "__main__":
 #                 c.append(letter)
 
 #         text = ''.join(c)
-        
+
 #         # Remove excess whitespaces
 #         text = ' '.join(text.split())
-    
+
 #         # Remove stopwords
 #         stop_words = set(stopwords.words('english'))
-    
+
 #         text = text.split()
 #         filtered_text = [ps.stem(word) for word in text if word not in stop_words]
 #         filtered_text = ' '.join(filtered_text)
