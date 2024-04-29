@@ -1,4 +1,4 @@
-from musixmatch import Musixmatch
+# from musixmatch import Musixmatch
 import pandas as pd
 from nltk.corpus import stopwords
 from collections import Counter
@@ -6,6 +6,11 @@ import collections
 import string
 import nltk
 import numpy as np
+
+
+from flask import Flask, request, jsonify, render_template
+
+app = Flask(__name__)
 
 """
     Processes a document / query.
@@ -112,97 +117,61 @@ def calculate_idf(dict, word, idf_dict):
     idf_dict[word]=idf
     return idf
 
+# Helper function
+# def recommended_songs(results):
+#     top_ten_songs = []
+#     for pair in results:
+#         top_ten_songs.append(pair[0])
+#     return top_ten_songs
+    
+# Searching function, takes in song_title, returns top 10 list
+def recommend_songs(user_input):
+    if user_input.lower() == 'quit':
+        return []
+    # if user_input not in title_to_lyrics:
+    print("We are unable to find songs similar to", user_input)
+    # else:      
+    #     # print(user_input, "stemmed and parsed lyrics:", users_song)
+    #     users_lyrics = title_to_lyrics[user_input]
+    #     scores_dict = bm25(title_to_lyrics, users_lyrics, vocab_set)
+    #     results = sorted(scores_dict.items(), key=lambda x:x[1], reverse=True)[1:10]
+    #     top_ten_songs = []
+    #     for pair in results:
+    #         top_ten_songs.append(pair[0])
+    #     results = top_ten_songs
+    #     return results
+    # print(results)
+
+# def main(song_title):
+# title_to_lyrics, word_counts, vocab_set = process_dataset()   
 
 def main():
-    title_to_lyrics, word_counts, vocab_set = process_dataset() # takes 20 seconds to run
+    # title_to_lyrics, word_counts, vocab_set = process_dataset() # takes 20 seconds to run
 
-
-    # print(vocab_set)
     # run everything in a loop so that user can input multiple song titles and get many
     # recs at once until they decide to quit
     while True:
         user_input = input("Enter a song title or 'quit' to quit: ") # Examples to test: Blank Space, # ​my tears ricochet, End Game
-        if user_input.lower() == 'quit':
-            break
-        if user_input not in title_to_lyrics:
-            print("We are unable to find songs similar to", user_input)
-        else:
-            # TODO
-                # call bm25 tf-idf function to return top 10 similar songs, using the lyrics of the entered song title as the query
-                # we are assuming that the songs entered exist in the data set + match case in dataset exactly
-            print(user_input, "stemmed and parsed lyrics:", title_to_lyrics[user_input])
-            scores_dict = bm25(title_to_lyrics, title_to_lyrics[user_input], vocab_set)
-            results = sorted(scores_dict.items(), key=lambda x:x[1], reverse=True)[1:10]
-            top_ten_songs = []
-            for pair in results:
-                top_ten_songs.append(pair[0])
-
-            print("results\n")
-            print(top_ten_songs)
-            # print(results)
-if __name__ == "__main__":
-    main()
+        # recommend_songs(user_input)
+        # return recommend_songs(user_input, title_to_lyrics, title_to_lyrics[user_input], vocab_set)
 
 
-# OLD CODE TO IGNORE
+@app.route('/')
+def index():
+  return render_template('index.html')
 
-# def get_data():
-#     ps = nltk.LancasterStemmer()
+@app.route('/submit', methods=['POST'])
+def recommend():
+    user_input = request.form['textbox_data']
+    # Process the user input (e.g., preprocess text)
+    # processed_input = preprocess_text(user_input)
+    # Generate recommendations based on the processed input
+    recommendations = recommend_songs(user_input)  # Assuming the main function returns recommendations
+    # Return the recommendations as a response
+    return jsonify(recommendations)
 
-#     # Function to preprocess text
-#     # Remove stop-words, transform words to lower-case, remove punctuation and numbers, and excess
-#     # whitespaces (keeping only one space that separates words).
-#     def preprocess_text(text):
-#         # Convert to lowercase
-#         text = text.lower()
+#   recommendations = recommend_songs(song_title)
+#   return jsonify(recommendations)
 
-#         # Remove punctuation and numbers
-#         c = []
-#         for letter in text:
-#             if letter not in string.punctuation and not letter.isdigit():
-#                 c.append(letter)
-
-#         text = ''.join(c)
-
-#         # Remove excess whitespaces
-#         text = ' '.join(text.split())
-
-#         # Remove stopwords
-#         stop_words = set(stopwords.words('english'))
-
-#         text = text.split()
-#         filtered_text = [ps.stem(word) for word in text if word not in stop_words]
-#         filtered_text = ' '.join(filtered_text)
-#         return filtered_text
-
-#     api_key = "f8e4df4dd30ca640559a3e0010c6980f"
-#     musixmatch = Musixmatch('f8e4df4dd30ca640559a3e0010c6980f')
-
-#     df = []
-#     for i in range(1):
-#         smth = musixmatch.catalogue_dump_get('test')
-#         print(smth)
-#         tracks = musixmatch.chart_tracks_get(1, 1000, 1)
-#         tracks_list = tracks['message']['body']['track_list']
-#         for i, track in enumerate(tracks_list): # artist_name, artist_id, song_name, song_id, genre_name, lyrics
-#             song_id = track['track']['track_id']
-#             song_name = track['track']['track_name']
-#             artist_name = track['track']['artist_name']
-#             artist_id = track['track']['artist_id']
-#             genre_name = ""
-#             try:
-#                 genre_name = track['track']['primary_genres']['music_genre_list'][0]['music_genre']['music_genre_name']
-#             except IndexError:
-#                 print(i, track['track']['primary_genres']['music_genre_list'], "will manually write these in")  # only 2 do not have a genre, causing issues
-#             lyrics = musixmatch.track_lyrics_get(song_id)['message']['body']['lyrics']['lyrics_body']
-#             lyrics = lyrics.split("\n")
-#             for i, lyric_line in enumerate(lyrics):
-#                 if lyric_line == "******* This Lyrics is NOT for Commercial use *******":
-#                     lyrics[i] = ""
-#                 lyrics[i] = preprocess_text(lyric_line)
-#             lyrics = ' '.join(lyrics)
-#             doc = [artist_name, artist_id, song_name, song_id, genre_name, lyrics]
-#             df.append(doc)
-
-#     dataframe = pd.DataFrame(df, columns=['artist_name', 'artist_id', 'song_name', 'song_id', 'genre_name', 'lyrics'])
-#     dataframe.to_csv('processed_data.csv')
+if __name__ == '__main__':
+  app.run(debug=True, port=3000)

@@ -1,5 +1,3 @@
-
-
 const searchInput = document.getElementById('search-input');
 const searchButton = document.getElementById('search-button');
 const resultsDiv = document.getElementById('results');
