@@ -123,36 +123,37 @@ def calculate_idf(dict, word, idf_dict):
 #     for pair in results:
 #         top_ten_songs.append(pair[0])
 #     return top_ten_songs
-    
+
 # Searching function, takes in song_title, returns top 10 list
+title_to_lyrics, word_counts, vocab_set = process_dataset()
+
 def recommend_songs(user_input):
     if user_input.lower() == 'quit':
         return []
     # if user_input not in title_to_lyrics:
-    print("We are unable to find songs similar to", user_input)
-    # else:      
-    #     # print(user_input, "stemmed and parsed lyrics:", users_song)
-    #     users_lyrics = title_to_lyrics[user_input]
-    #     scores_dict = bm25(title_to_lyrics, users_lyrics, vocab_set)
-    #     results = sorted(scores_dict.items(), key=lambda x:x[1], reverse=True)[1:10]
-    #     top_ten_songs = []
-    #     for pair in results:
-    #         top_ten_songs.append(pair[0])
-    #     results = top_ten_songs
-    #     return results
-    # print(results)
+    # print("We are unable to find songs similar to", user_input)
+    else:
+        # print(user_input, "stemmed and parsed lyrics:", users_song)
+        users_lyrics = title_to_lyrics[user_input]
+        scores_dict = bm25(title_to_lyrics, users_lyrics, vocab_set)
+        results = sorted(scores_dict.items(), key=lambda x:x[1], reverse=True)[1:10]
+        top_ten_songs = []
+        for pair in results:
+            top_ten_songs.append(pair[0])
+        results = top_ten_songs
+        return results
+    print(results)
 
 # def main(song_title):
-# title_to_lyrics, word_counts, vocab_set = process_dataset()   
 
-def main():
-    # title_to_lyrics, word_counts, vocab_set = process_dataset() # takes 20 seconds to run
-
-    # run everything in a loop so that user can input multiple song titles and get many
-    # recs at once until they decide to quit
-    while True:
-        user_input = input("Enter a song title or 'quit' to quit: ") # Examples to test: Blank Space, # ​my tears ricochet, End Game
-        # recommend_songs(user_input)
+# def main():
+#     # title_to_lyrics, word_counts, vocab_set = process_dataset() # takes 20 seconds to run
+#
+#     # run everything in a loop so that user can input multiple song titles and get many
+#     # recs at once until they decide to quit
+#     while True:
+#         user_input = input("Enter a song title or 'quit' to quit: ") # Examples to test: Blank Space, # ​my tears ricochet, End Game
+#         # recommend_songs(user_input)
         # return recommend_songs(user_input, title_to_lyrics, title_to_lyrics[user_input], vocab_set)
 
 
@@ -168,7 +169,7 @@ def recommend():
     # Generate recommendations based on the processed input
     recommendations = recommend_songs(user_input)  # Assuming the main function returns recommendations
     # Return the recommendations as a response
-    return jsonify(recommendations)
+    return render_template("index.html", recommendations=recommendations)
 
 #   recommendations = recommend_songs(song_title)
 #   return jsonify(recommendations)
