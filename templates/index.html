@@ -22,7 +22,15 @@
     </form>
   </div>
   <div id="results"></div>
-  <h1>{{ recommendations }}</h1>
+  <!-- <h1>{{ recommendations }}</h1> -->
+
+  <h3 class= "title"> Recommendations </h1>
+  <ul class = "list">
+    {% for recommendation in recommendations %}
+      <li> {{recommendation}} </li>
+
+      {% endfor %}
+  </ul>
 
   <script src="script.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">

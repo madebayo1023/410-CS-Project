@@ -149,7 +149,7 @@ body {
 }
 .search-container {
   margin-bottom: 20px;
-  
+
 }
 
 #results {
@@ -170,4 +170,10 @@ body {
   margin: 0;
   padding: 0;
 
+}
+.title {
+  color:white;
+}
+.list li{
+  color:white;
 }

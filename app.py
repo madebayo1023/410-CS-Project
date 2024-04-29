@@ -130,8 +130,9 @@ title_to_lyrics, word_counts, vocab_set = process_dataset()
 def recommend_songs(user_input):
     if user_input.lower() == 'quit':
         return []
-    # if user_input not in title_to_lyrics:
-    # print("We are unable to find songs similar to", user_input)
+    if user_input not in title_to_lyrics:
+        # print("We are unable to find songs similar to", user_input)
+        return ["We are unable to find songs similar to "+ user_input]
     else:
         # print(user_input, "stemmed and parsed lyrics:", users_song)
         users_lyrics = title_to_lyrics[user_input]
