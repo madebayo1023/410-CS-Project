@@ -8,11 +8,11 @@ To run the application:
 - install all dependencies included in the requirements.txt file
 - run 'python app.py' to start up the applictaion on port 3000 on your local computer (http://127.0.0.1:3000/).
 - once the application starts up, you can enter any song of your choice to get recommendations based on it!
-- we assume that the song title is in dataset & the query entered matches it exactly
-- * Blank Space
-  * End Game
-  * Hello
-  * Don’t Hurt Yourself
-  * Hotline Bling
-  * Unforgettable
-  * A Thousand Bad Times
+- we assume that the song title is in dataset & the query entered matches it exactly. Some example test queries are:
+ * Blank Space
+ * End Game
+ * Hello
+ * Don’t Hurt Yourself
+ * Hotline Bling
+ * Unforgettable
+ * A Thousand Bad Times
