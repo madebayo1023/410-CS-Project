@@ -22,22 +22,22 @@ app = Flask(__name__)
         filtered_text: the processed and stemmed document / query
 """
 def preprocess_text(text):
-        ps = nltk.LancasterStemmer()
-        # Remove punctuation and numbers
-        c = []
-        # print(text)
-        for letter in text:
-            if letter not in string.punctuation and not letter.isdigit():
-                c.append(letter)
-        text = ''.join(c)
-        # Remove excess whitespaces
-        text = ' '.join(text.split())
-        # Remove stopwords
-        stop_words = set(stopwords.words('english'))
-        text = text.split()
-        filtered_text = [ps.stem(word) for word in text if word not in stop_words]
-        filtered_text = ' '.join(filtered_text)
-        return filtered_text.lower()
+    ps = nltk.LancasterStemmer()
+    # Remove punctuation and numbers
+    c = []
+    # print(text)
+    for letter in text:
+        if letter not in string.punctuation and not letter.isdigit():
+            c.append(letter)
+    text = ''.join(c)
+    # Remove excess whitespaces
+    text = ' '.join(text.split())
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    text = text.split()
+    filtered_text = [ps.stem(word) for word in text if word not in stop_words]
+    filtered_text = ' '.join(filtered_text)
+    return filtered_text.lower()
 
 """
     Processes the dataset "dataset.csv".
@@ -79,8 +79,6 @@ def bm25(dict, query, vocabulary):
         score = 0.0
         for word in stemmed_query_words:
             if word in doc and word in vocabulary:
-                # print(word)
-                # print("word")
                 # calculate the tf for query and document
                 tf_q = calculate_tf(stemmed_query_words, word)
                 tf_d = calculate_tf(doc, word)
@@ -117,13 +115,6 @@ def calculate_idf(dict, word, idf_dict):
     idf_dict[word]=idf
     return idf
 
-# Helper function
-# def recommended_songs(results):
-#     top_ten_songs = []
-#     for pair in results:
-#         top_ten_songs.append(pair[0])
-#     return top_ten_songs
-
 # Searching function, takes in song_title, returns top 10 list
 title_to_lyrics, word_counts, vocab_set = process_dataset()
 
@@ -144,8 +135,6 @@ def recommend_songs(user_input):
         results = top_ten_songs
         return results
     print(results)
-
-# def main(song_title):
 
 # def main():
 #     # title_to_lyrics, word_counts, vocab_set = process_dataset() # takes 20 seconds to run
