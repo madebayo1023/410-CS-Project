@@ -10,9 +10,9 @@ To run the application:
 - once the application starts up, you can enter any song of your choice to get recommendations based on it!
 - we assume that the song title is in dataset & the query entered matches it exactly
 - * Blank Space
-    * End Game
-    * Hello
-    * Don’t Hurt Yourself
-    * Hotline Bling
-    * Unforgettable
-    * A Thousand Bad Times
+  * End Game
+  * Hello
+  * Don’t Hurt Yourself
+  * Hotline Bling
+  * Unforgettable
+  * A Thousand Bad Times
