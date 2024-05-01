@@ -16,3 +16,12 @@ To run the application:
    * Hotline Bling
    * Unforgettable
    * A Thousand Bad Times
+
+To run tests:
+- run 'python test.py'
+- run 'python -m unittest tests.MODULE_NAME'
+   where MODULE_NAME can be:
+   - DatasetTests
+   - DataTests
+   - ModelTests
+   - ResultsTests

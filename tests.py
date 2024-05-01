@@ -54,21 +54,23 @@ class ModelTests(unittest.TestCase):
     def test_bm25(self):
         self.assertEqual(5 - 3, 2)
 
-# # BM25 TF-IDF better than TF-IDF
-class BestModelTests(unittest.TestCase):
-    def test_bestmodel(self):
-        self.assertEqual(5 - 3, 2)
-
 # Results module tests:
 # Top 1 result is user song
 # Top results's top songs contain user song
 # Remixed songs are somtimes ranked closely
 class ResultsTests(unittest.TestCase):
     # Test 5 random snogs that the first song returned should be the same as the query song
+    def test_basic_run(self):
+        songs = ["Blank Space", "Hello", "End Game", "Adventure of a Lifetime", "Levitating"]
+
+        for song in songs:
+            top = recommend_songs(song)
+            self.assertEqual(len(top), 10-1)
+    
     def test_top_song(self):
         songs = ["Don’t Start Now",
                  "Stuck In the Moment (Acoustic)",
-                 "Something Just Like That (Love in Tokyo Version)",
+                 "LoveGame",
                  "Picture to Burn",
                  "Tim McGraw"]
         
@@ -76,9 +78,6 @@ class ResultsTests(unittest.TestCase):
             top = recommend_songs(song)
             self.assertEqual(song, top[0], song + "'s top 1 song is incorrect")
     
-    def test_songs_contain(self):
-        self.assertEqual(5 - 3, 2)
-
     def test_remixsongs(self):
         songs = ["We Found Love (Black Cards Remix)",
                  "Shape of You (Berywam Remix)",
@@ -101,19 +100,19 @@ class ResultsTests(unittest.TestCase):
                     break
             self.assertTrue(seen, remix_title + " not in " + original_title + "'s top songs")
 
-# Frontend module tests:
-# Valid song search
-# Empty song search
-# Invalid song search
-# class FrontendTests(unittest.TestCase):
-#     def test_empty_search(self):
-#         self.assertEqual(5 - 3, 2)
-
-#     def test_valid_search(self):
-#         self.assertEqual(5 - 3, 2)
+    def test_songs_contain(self):
+        self.assertEqual(5 - 3, 2)
+        songs = ["New Rules (KREAM Remix)",
+                 "Teenage Dream (Breathe Electric Remix)",
+                 "Special",
+                 "Extra Special", 
+                 "1000 Doves"]
     
-#     def test_invalid_search(self):
-#         self.assertEqual(5 - 3, 2)
+        for song in songs:
+            top = recommend_songs(song)
+            top_list = recommend_songs(top[2])
+
+            self.assertTrue(song in top_list, song + " not in " + top[2])
 
 if __name__ == '__main__':
     unittest.main()
