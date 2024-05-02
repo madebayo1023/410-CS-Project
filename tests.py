@@ -41,38 +41,50 @@ class DataTests(unittest.TestCase):
                 self.fail("Error: numeric character is in dataset")
         self.assertTrue(1)
 
-# Model module tests:
-# Calculated values exist
-# TF-IDF, BM25 are valid
+# ModelTests module to compare VSM and BM25
 class ModelTests(unittest.TestCase):
-    def test_calculation(self):
-        self.assertEqual("hello" + "world", "helloworld")
+    def test_one(self):
+        song = "Blank Space"
+        bm_top = recommend_songs(song)
+        vsm_top = vsm_recommend_songs(song)
+        print("BM: " + str(bm_top))
+        print("VSM: " + str(vsm_top))
+        self.assertEqual(len(bm_top), len(vsm_top))
 
-    def test_tfidf(self):
-        self.assertEqual(5 - 3, 2)
-        
-    def test_bm25(self):
-        self.assertEqual(5 - 3, 2)
+    def test_two(self):
+        song = "End Game"
+        bm_top = recommend_songs(song)
+        vsm_top = vsm_recommend_songs(song)
+        print("BM: " + str(bm_top))
+        print("VSM: " + str(vsm_top))
+        self.assertEqual(len(bm_top), len(vsm_top))
+
+    def test_basic(self):
+        songs = ["Hello", "Adventure of a Lifetime", "Levitating"]
+        for song in songs:
+            bm_top = recommend_songs(song)
+            vsm_top =  vsm_recommend_songs(song)
+            self.assertEqual(len(bm_top), len(vsm_top))
 
 # Results module tests:
 # Top 1 result is user song
 # Top results's top songs contain user song
 # Remixed songs are somtimes ranked closely
 class ResultsTests(unittest.TestCase):
-    # Test 5 random snogs that the first song returned should be the same as the query song
+    def test_empty(self):
+        self.assertEqual(recommend_songs(""), ['We are unable to find songs similar to '])
+
+    # Test 5 snogs that the first song returned should be the same as the query song
     def test_basic_run(self):
         songs = ["Blank Space", "Hello", "End Game", "Adventure of a Lifetime", "Levitating"]
 
         for song in songs:
             top = recommend_songs(song)
-            self.assertEqual(len(top), 10-1)
+            self.assertEqual(len(top), 10)
     
     def test_top_song(self):
-        songs = ["Don’t Start Now",
-                 "Stuck In the Moment (Acoustic)",
-                 "LoveGame",
-                 "Picture to Burn",
-                 "Tim McGraw"]
+        songs = ["How You See the World", "Wildest Dreams / Enchanted", "Tucked", "Blank Space"]
+        songs = random.sample(list(title_lyric_dict.keys()), 5)
         
         for song in songs:
             top = recommend_songs(song)
@@ -103,14 +115,13 @@ class ResultsTests(unittest.TestCase):
     def test_songs_contain(self):
         self.assertEqual(5 - 3, 2)
         songs = ["New Rules (KREAM Remix)",
-                 "Teenage Dream (Breathe Electric Remix)",
                  "Special",
-                 "Extra Special", 
-                 "1000 Doves"]
+                 "1000 Doves",
+                 "Hot n Cold"]
     
         for song in songs:
             top = recommend_songs(song)
-            top_list = recommend_songs(top[2])
+            top_list = recommend_songs(top[1])
 
             self.assertTrue(song in top_list, song + " not in " + top[2])
 
