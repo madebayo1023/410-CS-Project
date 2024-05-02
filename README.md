@@ -28,6 +28,7 @@ To run tests:
 
 To use BM25 TF-IDF model:
 - in 'app.py' change line 197 to 'recommendations = recommend_songs(user_input)'
+- Comment out line 142 so that it is: # title_to_lyrics_vector = create_data_vector(title_to_lyrics, vocab_set) to help with run time
 
 To use VSM bit vector model:
 - in 'app.py' change line 197 to 'recommendations = vsm_recommend_songs(user_input)'
