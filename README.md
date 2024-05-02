@@ -25,3 +25,9 @@ To run tests:
    - DataTests
    - ModelTests
    - ResultsTests
+
+To use BM25 TF-IDF model:
+- in 'app.py' change line 197 to 'recommendations = recommend_songs(user_input)'
+
+To use VSM bit vector model:
+- in 'app.py' change line 197 to 'recommendations = vsm_recommend_songs(user_input)'
