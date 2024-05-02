@@ -32,3 +32,4 @@ To use BM25 TF-IDF model:
 
 To use VSM bit vector model:
 - in 'app.py' change line 197 to 'recommendations = vsm_recommend_songs(user_input)'
+- Un-comment line 142 so that it is: title_to_lyrics_vector = create_data_vector(title_to_lyrics, vocab_set)
