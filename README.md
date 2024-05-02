@@ -16,6 +16,7 @@ To run the application:
    * Hotline Bling
    * Unforgettable
    * A Thousand Bad Times
+- Disclaimer: if the text box does not work, zoom into the screen and try clicking at it in different places. The effectiveness of the UI changes depending on screen size and resoultion
 
 To run tests:
 - run 'python test.py'
